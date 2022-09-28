@@ -114,12 +114,51 @@ describe('favourite blog', () => {
 })
 
 describe('most blogs', () => {
-  const result = listHelper.mostBlogs(blogs)
+  test('of a list of one writer', () => {
+    const result = listHelper.mostBlogs(listWithOneBlog)
+    expect(result).toEqual(
+      {
+        author: "Edsger W. Dijkstra",
+        blogs: 1
+      }
+    )
+  })
   test('of a list of many writers', () => {
+    const result = listHelper.mostBlogs(blogs)
     expect(result).toEqual(
       {
         author: "Robert C. Martin",
         blogs: 3
+      }
+    )
+  })
+})
+
+describe('most liked author', () => {
+  test('of a empty list', () => {
+    const result = listHelper.mostLikes(emptyList)
+    expect(result).toEqual(
+      {
+        author: "",
+        likes: 0
+      }
+    )
+  })
+  test('of a list of one writer', () => {
+    const result = listHelper.mostLikes(listWithOneBlog)
+    expect(result).toEqual(
+      {
+        author: "Edsger W. Dijkstra",
+        likes: 5
+      }
+    )
+  })
+  test('of a list of many writers', () => {
+    const result = listHelper.mostLikes(blogs)
+    expect(result).toEqual(
+      {
+        author: "Edsger W. Dijkstra",
+        likes: 17
       }
     )
   })
