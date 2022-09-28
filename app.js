@@ -1,5 +1,6 @@
 const config = require('./utils/config')
 const express = require('express')
+require('express-async-errors')
 const app = express()
 const cors = require('cors')
 const blogsRouter = require('./controllers/blogs')
@@ -22,7 +23,7 @@ app.use(express.static('build'))
 app.use(express.json())
 app.use(middleware.morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-app.use(blogsRouter)
+app.use(('/api/blogs'), blogsRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
