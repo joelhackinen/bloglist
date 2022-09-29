@@ -66,9 +66,9 @@ describe('POST requests', () => {
     expect(withoutIds).toContainEqual({...newBlog, likes: 0})
   })
   test('to /api/blogs should fail without fields "title" and "url"', async () => {
-    const newBlog1 = { author: 'asdf', url: 'nfff', likes: 39 }
-    const newBlog2 = { title: 'yea', author: 'asdf', likes: 39 }
-    const newBlog3 = { author: 'asdf', likes: 39 }
+    const newBlog1 = { author: 'aaaa', url: 'nfff', likes: 1 }
+    const newBlog2 = { title: 'yea', author: 'bbbb', likes: 2 }
+    const newBlog3 = { author: 'asdf', likes: 3 }
     await api
       .post('/api/blogs')
       .send(newBlog1)
@@ -83,6 +83,47 @@ describe('POST requests', () => {
       .expect(400)
   })
 })
+
+describe('DELETE requests', () => {
+  const newBlog1 = { title: "rocke", author: 'aaallla', url: 'nfuuff', likes: 98 }
+  test('to /api/blogs/id are working', async () => {
+    const postResult = await api
+      .post('/api/blogs')
+      .send(newBlog1)
+      .expect(201)
+    const idToBeDeleted = postResult.body.id
+    const beforeDelete = await helper.blogsInDb()
+
+    await api
+      .delete(`/api/blogs/${idToBeDeleted}`)
+      .expect(204)
+
+    const afterDelete = await helper.blogsInDb()
+    expect(beforeDelete.length).toBe(afterDelete.length+1)
+    expect(afterDelete.map(item => item.id)).not.toContain(idToBeDeleted)
+  })
+})
+
+describe('PUT requests', () => {
+  const newBlog1 = { title: "rocke", author: 'aaallla', url: 'nfuuff', likes: 98 }
+  test('to /api/blogs/id are working', async () => {
+    const postResult = await api
+      .post('/api/blogs')
+      .send(newBlog1)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+    const idToBeChanged = postResult.body.id
+    
+    const putResult = await api
+      .put(`/api/blogs/${idToBeChanged}`)
+      .send({...newBlog1, title: "MUOKATTU"})
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    expect(putResult.body.title).toEqual("MUOKATTU")
+  })
+})
+
+
 
 
 afterAll(() => {
