@@ -7,6 +7,10 @@ morgan.token('body', req => {
   return JSON.stringify(req.body)
 })
 
+morgan.token('token', req => {
+  return req.token ? 'token found' : 'no token'
+})
+
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
@@ -44,6 +48,7 @@ const userExtractor = async (request, response, next) => {
       return response.status(401).json({ error: 'token missing or invalid' })
     }
     request.user = await User.findById(decodedToken.id.toString())
+    logger.info(request.user)
   }
   next()
 }

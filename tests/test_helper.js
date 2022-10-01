@@ -1,5 +1,7 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const loginRouter = require('express').Router()
+const bcrypt = require('bcrypt')
 
 const initialBlogs = [
   {
@@ -40,9 +42,12 @@ const usersInDb = async () => {
   return users.map(u => u.toJSON())
 }
 
+
+
+
 module.exports = {
   initialBlogs,
   nonExistingId,
   blogsInDb,
-  usersInDb,
+  usersInDb
 }
