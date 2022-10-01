@@ -57,14 +57,13 @@ describe('GET requests', () => {
 
 
 describe('POST requests', () => {
+  const newBlog = {
+    title: 'testtitle',
+    author: 'testauthor',
+    url: 'tesurl',
+    likes: 1
+  }
   test('to /api/blogs will not add new blog without token', async () => {
-    const newBlog = {
-      title: 'testtitle',
-      author: 'testauthor',
-      url: 'tesurl',
-      likes: 1
-    }
-
     await api
       .post('/api/blogs')
       .send(newBlog)
@@ -73,17 +72,10 @@ describe('POST requests', () => {
   })
 
   test('to /api/blogs are adding a document', async () => {
-    const newBlog2 = {
-      title: 'testtitle',
-      author: 'testauthor',
-      url: 'tesurl',
-      likes: 1
-    }
-
     await api
       .post('/api/blogs')
       .set('Authorization', `bearer ${token}`)
-      .send(newBlog2)
+      .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
@@ -93,15 +85,11 @@ describe('POST requests', () => {
   })
 
   test('to /api/blogs will result in adding likes set to 0 when it is not preset', async () => {
-    const newBlog = {
-      title: 'Testing again',
-      author: 'asdf',
-      url: 'nfff'
-    }
+    const { likes, ...blogWithoutLikes } = newBlog
     await api
       .post('/api/blogs')
       .set('Authorization', `bearer ${token}`)
-      .send(newBlog)
+      .send(blogWithoutLikes)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
@@ -139,7 +127,7 @@ describe('POST requests', () => {
 
 
 describe('DELETE requests', () => {
-  const newBlog1 = {
+  const newBlog = {
     title: "rocke",
     author: 'aaallla',
     url: 'nfuuff',
@@ -150,7 +138,7 @@ describe('DELETE requests', () => {
     const postResult = await api
       .post('/api/blogs')
       .set('Authorization', `bearer ${token}`)
-      .send(newBlog1)
+      .send(newBlog)
       .expect(201)
     const idToBeDeleted = postResult.body.id
     const beforeDelete = await helper.blogsInDb()
@@ -169,7 +157,7 @@ describe('DELETE requests', () => {
     const postResult = await api
       .post('/api/blogs')
       .set('Authorization', `bearer ${token}`)
-      .send(newBlog1)
+      .send(newBlog)
       .expect(201)
     const idToBeDeleted = postResult.body.id
     const {anotherId, anotherToken} = await createAndLogin('anotherTest')
