@@ -24,7 +24,7 @@ app.use(cors())
 app.use(express.static('build'))
 app.use(express.json())
 app.use(middleware.tokenExtractor)
-app.use(middleware.morgan(':method :url :status :res[content-length] - :response-time ms :body --- :token'))
+app.use(middleware.morgan(':method :url :status - :body --- :token'))
 
 app.use(('/api/blogs'), middleware.userExtractor, blogsRouter)
 app.use(('/api/users'), usersRouter)

@@ -25,11 +25,12 @@ const createAndLogin = async (username) => {
 }
 
 
-beforeEach(async () => {
+beforeAll(async () => {
   await Blog.deleteMany({})
   await User.deleteMany({})
   await createAndLogin('test')
-  Blog.insertMany(helper.initialBlogs.map(blog => ({...blog, user: userId})))
+  await Blog.insertMany(helper.initialBlogs.map(blog => ({...blog, user: userId})))
+  console.log(token)
 })
 
 
