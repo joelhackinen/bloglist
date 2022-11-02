@@ -15,8 +15,8 @@ blogsRouter.post('/', async (request, response) => {
     return response.status(401).json({ error: 'token missing or invalid' })
   }
   const blogToBeAdded = blog.hasOwnProperty('likes')
-    ? new Blog({...blog, user: user._id})
-    : new Blog({...blog, user: user._id, likes: 0})
+    ? new Blog({...blog, user: user._id, comments: []})
+    : new Blog({...blog, user: user._id, comments: [], likes: 0})
   const savedBlog = await (new Blog(blogToBeAdded)).save()
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()

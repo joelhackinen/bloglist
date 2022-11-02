@@ -101,7 +101,7 @@ describe('POST requests', () => {
 
     const response = await api.get('/api/blogs')
     const withoutIds = response.body.map(item => removeIdAndUser(item))
-    expect(withoutIds).toContainEqual({...newBlog, likes: 0})
+    expect(withoutIds).toContainEqual({...newBlog, likes: 0, comments: []})
   })
 
   test('to /api/blogs should fail without fields "title" and "url"', async () => {
