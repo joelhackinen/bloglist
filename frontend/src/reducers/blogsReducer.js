@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { setErrorMessage, setSuccessMessage } from './notificationReducer'
+import { addUserBlog, removeUserBlog } from './usersReducer'
 import blogService from '../services/blogService'
 
 const blogSlice = createSlice({
@@ -33,6 +34,7 @@ export const createBlog = (blogObject) => {
     try {
       const created = await blogService.create({ ...blogObject, likes: 0 })
       dispatch(appendBlog({ ...created, user: blogObject.user }))
+      dispatch(addUserBlog(created, blogObject.user.id))
       dispatch(setSuccessMessage(`a new blog ${blogObject.title} by ${blogObject.author} created`, 5))
     } catch (e) {
       dispatch(setErrorMessage(`adding failed: ${e.response.data.error}`, 5))
@@ -59,11 +61,12 @@ export const addLike = (blogObject) => {
   }
 }
 
-export const deleteBlog = (id) => {
+export const deleteBlog = (id, userId) => {
   return async dispatch => {
     try {
       await blogService.remove(id)
       dispatch(removeBlog(id))
+      dispatch(removeUserBlog(id, userId))
       dispatch(setSuccessMessage('blog removed', 5))
     } catch (e) {
       dispatch(setErrorMessage(`removing failed: ${e.response.data.error}`, 5))

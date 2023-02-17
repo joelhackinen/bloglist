@@ -15,18 +15,11 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initializeBlogs())
-  }, [])
-
-  useEffect(() => {
     dispatch(initializeUser())
+    dispatch(initializeUsers())
   }, [])
 
   const user = useSelector(state => state.user)
-  const blogs = useSelector(state => state.blogs)
-
-  useEffect(() => {
-    dispatch(initializeUsers())
-  }, [blogs])
 
   return (
     <div className="container" style={{ maxWidth: 1080 }}>

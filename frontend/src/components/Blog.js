@@ -21,7 +21,7 @@ const BlogPage = () => {
 
   const handleDelete = () => {
     if (window.confirm(`Remove ${title} by ${author}?`)) {
-      dispatch(deleteBlog(id))
+      dispatch(deleteBlog(id, user.id))
       navigate('/')
     }
   }
