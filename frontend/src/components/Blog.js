@@ -1,20 +1,23 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { addLike, deleteBlog, addComment } from '../reducers/blogsReducer'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useParams } from 'react-router-dom'
 import { Button, Badge } from 'react-bootstrap'
 import CommentForm from './CommentForm'
 
 
-const BlogPage = ({ blog }) => {
+const BlogPage = () => {
+  const { id } = useParams()
   const navigate = useNavigate()
   const currentUser = useSelector(state => state.user)
+  const blogs = useSelector(state => state.blogs)
+  const blog = blogs.find(b => b.id === id)
   const dispatch = useDispatch()
 
   if (!blog) {
     return null
   }
 
-  const { id, title, author, url, user, likes, comments } = blog
+  const { title, author, url, user, likes, comments } = blog
 
   const handleDelete = () => {
     if (window.confirm(`Remove ${title} by ${author}?`)) {
