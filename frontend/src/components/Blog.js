@@ -6,12 +6,14 @@ import CommentForm from './CommentForm'
 
 
 const BlogPage = () => {
-  const { id } = useParams()
+  const dispatch = useDispatch()
   const navigate = useNavigate()
+
   const currentUser = useSelector(state => state.user)
+
+  const { id } = useParams()
   const blogs = useSelector(state => state.blogs)
   const blog = blogs.find(b => b.id === id)
-  const dispatch = useDispatch()
 
   if (!blog) {
     return null

@@ -17,32 +17,19 @@ const usersSlice = createSlice({
       const { blog, userId } = action.payload
       return state.map(u => u.id === userId ? { ...u, blogs: [ ...u.blogs, blog ] } : u)
     },
-    deleteUserBlog(state, action) {
+    removeUserBlog(state, action) {
       const { userId, blogId } = action.payload
       return state.map(u => u.id === userId ? { ...u, blogs: u.blogs.filter(b => b.id !== blogId) } : u)
     }
   }
 })
 
-export const { setUsers, appendUser, appendUserBlog, deleteUserBlog } = usersSlice.actions
+export const { setUsers, appendUser, appendUserBlog, removeUserBlog } = usersSlice.actions
 
 export const initializeUsers = () => {
   return async dispatch => {
     const users = await userService.getAll()
     dispatch(setUsers(users))
-  }
-}
-
-export const addUserBlog = (blog, userId) => {
-  return dispatch => {
-    console.log(blog)
-    dispatch(appendUserBlog({ blog, userId }))
-  }
-}
-
-export const removeUserBlog = (blogId, userId) => {
-  return dispatch => {
-    dispatch(deleteUserBlog({ blogId, userId }))
   }
 }
 
