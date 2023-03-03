@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { setErrorMessage, setSuccessMessage } from './notificationReducer'
 import blogService from '../services/blogService'
 import loginService from '../services/loginService'
+import authService from '../services/authService'
 import jwt_decode from 'jwt-decode'
 
 const initialState = null
@@ -22,13 +23,20 @@ const userSlice = createSlice({
 export const { setUser, unsetUser } = userSlice.actions
 
 export const initializeUser = () => {
-  return dispatch => {
+  return async dispatch => {
     const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      blogService.setToken(user.token)
-      user.id = jwt_decode(user.token).id
-      dispatch(setUser(user))
+    if (!loggedUserJSON) {
+      return
+    }
+
+    const user = JSON.parse(loggedUserJSON)
+    try {
+      const newUser = await authService.me(user)
+      const { token, ...authUser } = newUser
+      blogService.setToken(token)
+      dispatch(setUser(authUser))
+    } catch (e) {
+      dispatch(setErrorMessage(`${e.response.data.error}`, 5))
     }
   }
 }
@@ -39,12 +47,12 @@ export const login = (username, password) => {
       const loggedUser = await loginService.login({
         username, password,
       })
-      blogService.setToken(loggedUser.token)
-      loggedUser.id = jwt_decode(loggedUser.token).id
+      const { token, ...authUser } = loggedUser
+      blogService.setToken(token)
       window.localStorage.setItem(
-        'loggedBloglistUser', JSON.stringify(loggedUser)
+        'loggedBloglistUser', JSON.stringify({ token })
       )
-      dispatch(setUser(loggedUser))
+      dispatch(setUser(authUser))
       dispatch(setSuccessMessage(`welcome, ${username}!`, 5))
     } catch (e) {
       dispatch(setErrorMessage(`${e.response.data.error}`, 5))
