@@ -2,6 +2,7 @@ Deployed [here](https://crimson-night-5745.fly.dev/)
 
 ## Project description
 The task was to build a fullstack application in which users can add blog recommendations and comment blogs added by others.
+The deployed version is not currently the newest one.
 
 ## Run locally
 1. clone the repository with `git clone https://github.com/joelhackinen/bloglist.git`
